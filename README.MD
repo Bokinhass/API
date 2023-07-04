@@ -94,4 +94,28 @@
 
       port: env.PORT,
 
-17- 
+17- configurar o eslint 
+
+      npm i eslint @rocketseat/eslint-config -D
+
+18- parar criar minha config
+
+     npx eslint --init
+
+19- Criar o arquivo .eslintrc.json na raiz
+
+     {
+       "extends": [
+        "@rocketseat/eslint-config/node"
+       ]
+     }
+
+20- Criar Alias for imports (simplificar imports - encurtar)
+
+20.1- Remover comentário do "baseUrl e paths"
+
+      "paths": {
+        "@/*": ["./src/*"]
+      },
+
+21-
