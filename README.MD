@@ -118,4 +118,46 @@
         "@/*": ["./src/*"]
       },
 
-21-
+21- Instalar prisma 
+      
+      npm i prisma -D
+      npx primsa init
+
+22- No schema.prisma acrescentar
+
+      model User {
+            id String @id @default(uuid())
+            name String
+            email String @unique
+
+            @@map("users")
+      }
+
+22.1 - uuid -> gerador de id aleatório e único
+      @@map -> renomear a tabela (padrão é o User)
+
+23- No console ... tipar a tabela criada (model User)
+
+      npx prisma generate
+
+24- No Console usar
+
+      npm i @prisma/client
+
+25- Mudar no app.ts
+
+      import fastify from 'fastify'
+      import { PrismaClient } from '@prisma/client'
+
+      export const app = fastify()
+
+      const prisma = new PrismaClient()
+
+      prisma.user.create({
+        data: {
+          name: 'Jhon Doe',
+          email: 'jhondoe@gmail.com',
+        },
+      })
+
+26- 
