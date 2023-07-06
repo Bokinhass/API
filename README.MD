@@ -160,4 +160,34 @@
         },
       })
 
-26- 
+26- Acessar o banco 
+
+      npx prisma migrate dev
+      npx prisma studio
+
+27- Criar um app(container) com docker usando bitnami/postgres com usuário e senha e porta padrão
+
+      docker run --name api-pg -e POSTGRESQL_USERNAME=docker -e POSTGRESQL_PASSWORD=docker -e POSTGRESQL_DATABASE=api -p 5432:5432 bitnami/postgresql
+
+28- start e desligar o server do docker
+
+      docker start api-pg
+      docker stop api-pg
+
+      docker logs api-pg -f
+
+      docker ps
+
+29- no .env mudar o DATABASE_URL
+
+      DATABASE_URL="postgresql://docker:docker@localhost:5432/api?schema=public"
+
+30- Atualizar o banco de dados com as migrations
+
+      npx prisma migrate dev
+
+31- para ver as tabelas pelo nav
+
+      npx prisma studio
+
+32- 
