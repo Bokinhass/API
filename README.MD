@@ -190,4 +190,97 @@
 
       npx prisma studio
 
-32- 
+32- Criar um arquivo na raiz docker-composse.yml
+
+      version: '3'
+
+      services:
+            api-pg:
+            image: bitnami/postgresql
+            ports:
+                  - 5432:5432
+            environment:
+                  - POSTGRESQL_USERNAME=docker
+                  - POSTGRESQL_PASSWORD=docker
+                  - POSTGRESQL_DATABASE=api 
+
+33 - No console para rodar o docker
+
+      docker composse up -d   (create)
+      docker compose down     (delete)
+
+      docker compose stop     (stop)
+
+34- Criar mais tabelas no schema do prisma (models)
+
+      model User {
+      id String @id @default(uuid())
+        name String
+        email String @unique
+        password_hash String
+        created_at DateTime @default(now())
+
+      @@map("users")
+      }
+
+      model CheckIn {
+        id String @id @default(uuid())
+        created_at DateTime @default(now())
+        validated_at DateTime?
+
+      @@map("check_ins")
+      }
+
+      model Gym {
+        id String @id @default(uuid())
+        title String
+        description String?
+        phone String?
+        latitude Decimal
+        longitude Decimal
+
+      @@map("gyms")
+      }
+
+35- Add relacionamentos entre tabelas no schema
+
+      model User {
+        id            String    @id @default(uuid())
+        name          String
+        email         String    @unique
+        password_hash String
+        created_at    DateTime  @default(now())
+
+        checkIns      CheckIn[]
+
+        @@map("users")
+      }
+
+      model CheckIn {
+        id           String    @id @default(uuid())
+        created_at   DateTime  @default(now())
+        validated_at DateTime?
+
+        user    User   @relation(fields: [user_id], references: [id])
+        user_id String
+
+        gym   Gym    @relation(fields: [gym_id], references: [id])
+        gym_id String
+
+        @@map("check_ins")
+      }
+
+      model Gym {
+        id          String    @id @default(uuid())
+        title       String
+        description String?
+        phone       String?
+        latitude    Decimal
+        longitude   Decimal
+
+        checkIns     CheckIn[]
+
+        @@map("gyms")
+      }
+
+36- 
