@@ -283,4 +283,156 @@
         @@map("gyms")
       }
 
-36- 
+36- Criar pasta lib + prisma.ts para separar execução do banco de dados e requisições e habilitar logs do prisma somente em dev
+
+      import { env } from '@/env'
+      import { PrismaClient } from '@prisma/client'
+
+      export const prisma = new PrismaClient({
+        log: env.NODE_ENV === 'dev' ? ['query'] : [],
+      })
+
+37- Criar pasta http + controllers para separar arquivos de requisição e criar register.ts com o código:
+
+      import { FastifyRequest, FastifyReply } from 'fastify'
+      import { prisma } from '@/lib/prisma'
+      import { z } from 'zod'
+
+      export async function register(req: FastifyRequest, res: FastifyReply) {
+        const registerBodySchema = z.object({
+        name: z.string(),
+        email: z.string().email(),
+        password: z.string().min(6),
+      })
+
+        const { name, email, password } = registerBodySchema.parse(req.body)
+
+        await prisma.user.create({
+          data: {
+            name,
+            email,
+            password_hash: password,
+          },
+        })
+
+        return res.status(201).send()
+      }
+
+38- Criar o arquivo routes.ts em http para separar melhor as rotas do app e mudar o app.ts
+
+routes.ts: 
+
+      import { FastifyInstance } from 'fastify'
+      import { register } from './register'
+
+      export async function appRoutes(app: FastifyInstance) {
+        app.post('/users', register)
+      }
+
+app.ts:
+
+      import fastify from 'fastify'
+      import { appRoutes } from './http/routes'
+
+      export const app = fastify()
+
+      app.register(appRoutes)
+
+39- Instalar o bcrypt e o @types/bcrypt para criptografar as senhas criadas. O número 6 como segundo parametro indica quantos rounds vão ser executados com a senha (6 é o ideal). Depois adicionar a funcionalidade ao register.ts e deixar só password_hash no await
+
+      npm i bcrypt @types/bcrypt
+
+register.ts: 
+
+      const password_hash = await hash(password, 3)
+
+40- Aproveitar e criar uma verificação se já existe o email na hora de criar o usuário
+
+      const userWithSameEmail = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+      })
+
+      if (userWithSameEmail) {
+        return res.status(409).send('This email is already')
+      }
+
+41- Criar na pasta src uma pasta use-cases para deixar separado a criação de usuários das requisições http
+
+register.ts (use-case)
+
+      import { prisma } from '@/lib/prisma'
+      import { hash } from 'bcryptjs'
+
+      interface RegisterUseCaseRequest {
+        name: string
+        email: string
+        password: string
+      }
+
+      export async function registerUseCase({
+        name,
+        email,
+        password,
+      }: RegisterUseCaseRequest) {
+            const password_hash = await hash(password, 3)
+
+            const userWithSameEmail = await prisma.user.findUnique({
+              where: {
+                  email,
+              },
+            })
+
+            if (userWithSameEmail) {
+              throw new Error('This email is already.')
+            }
+
+            await prisma.user.create({
+              data: {
+                  name,
+                  email,
+                  password_hash,
+              },
+            })
+      }
+
+register.ts (controllers)
+
+      try {
+        await registerUseCase({
+            name,
+            email,
+            password,
+        })
+      } catch (err) {
+        return res.status(409).send()
+      }
+
+42- Separar toda logística do prisma em um arquivo separado, para generalizar o código (Design Patters), se for preciso um dia trocar o ORM do app (Prisma).
+Criar pasta repositories em src e o arquivo prisma-users-repository.ts
+
+      import { prisma } from '@/lib/prisma'
+      import { Prisma } from '@prisma/client'
+
+      export class PrismaUsersRepository {
+        async create(data: Prisma.UserCreateInput) {
+          const user = await prisma.user.create({
+            data,
+          })
+
+          return user
+        }
+      }
+
+register.ts (controllers) adicionar a instancia do prisma
+
+      const prismaUsersRepository = new PrismaUsersRepository()
+
+      await prismaUsersRepository.create({
+        name,
+        email,
+        password_hash,
+      })
+
+43- 
