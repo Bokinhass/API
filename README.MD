@@ -435,4 +435,10 @@ register.ts (controllers) adicionar a instancia do prisma
         password_hash,
       })
 
-43- 
+43- Instalar o vitest e as configs (ferramenta de testes e o pacotes para entender as importações com @)
+
+      npm i vitest vite-tsconfig-paths -D
+
+44- Começar criar os tests
+
+45- 
