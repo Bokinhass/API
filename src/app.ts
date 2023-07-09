@@ -20,5 +20,5 @@ app.setErrorHandler((error, _, reply) => {
     // TODO: Here we should log to on external tool like DataLog
   }
 
-  return reply.status(500).send({ message: 'Internal server error.'})
+  return reply.status(500).send({ message: 'Internal server error.' })
 })
