@@ -22,9 +22,6 @@ describe('Register Use Case', () => {
   })
 
   it('should not be able to check in twice on the same day', async () => {
-    const checkInsRepository = new InMemoryCheckInsRepository()
-    const sut = new CheckInsUseCase(checkInsRepository)
-
     const { checkIn } = await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
