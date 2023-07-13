@@ -1,4 +1,4 @@
-import { ChekIn } from '@prisma/client'
+import { CheckIn} from '@prisma/client'
 import { CheckInsRepository } from '../repositories/check-ins-repository';
 
 interface CheckInUseCaseRequest {
@@ -7,7 +7,7 @@ interface CheckInUseCaseRequest {
 }
 
 interface CheckInUseCaseResponse {
-  checkIn: ChekIn
+  checkIn: CheckIn
 }
 
 export class CheckInsUseCase {
