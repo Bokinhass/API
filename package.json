@@ -16,10 +16,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@rocketseat/eslint-config": "2.0.1",
     "@types/bcryptjs": "2.4.2",
     "@types/node": "20.1.4",
     "@vitest/coverage-c8": "0.31.1",
     "@vitest/ui": "0.31.1",
+    "eslint": "8.45.0",
     "prisma": "4.14.0",
     "tsup": "6.7.0",
     "tsx": "3.12.7",

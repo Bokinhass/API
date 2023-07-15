@@ -16,18 +16,18 @@ export class AuthenticateUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
   async execute({
-    email, 
+    email,
     password,
   }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
     const user = await this.usersRepository.findByEmail(email)
 
-    if(!user) {
+    if (!user) {
       throw new InvalidCredentialsError()
     }
 
     const doesPasswordMatches = await compare(password, user.password_hash)
 
-    if(!doesPasswordMatches) {
+    if (!doesPasswordMatches) {
       throw new InvalidCredentialsError()
     }
 
