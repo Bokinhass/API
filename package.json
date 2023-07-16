@@ -11,7 +11,7 @@
     "build": "tsup src --out-dir build",
     "test": "vitest run --dir src/use-cases",
     "watch": "vitest run --dir src/use-cases",
-    "pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
+    "pree2e": "run-s test:create-prisma-environment test:install-prisma-environment",
     "e2e": "vitest run --dir src/http",
     "coverage": "vitest run --coverage",
     "ui": "vitest --ui"
